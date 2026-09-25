@@ -485,7 +485,7 @@ Frozen study behavior:
 Final display rule:
 - Front has no Korean gender labels.
 - Noun gender stays on the small back POS line.
-- Source-supplied genitive/related Greek forms may appear as a small second line.
+- Only noun genitive/related Greek forms may appear as a small second line; adjective/pronoun shorthand endings are hidden on front/overview.
 - Mobile shrinks ONLY headwords that actually exceed card width.
 -->
 
@@ -741,15 +741,14 @@ function greekDisplayParts(c){
   const articles=new Set(['ὁ','ἡ','τό']);
 
   if(String(c.pos||'').startsWith('noun')){
-    // Noun front: show the headword; if the source gives a genitive/related form,
-    // keep that Greek form in a small second line. Gender article belongs on the back.
-    const extras=parts.slice(1);
-    if(extras.length && articles.has(extras[extras.length-1])) extras.pop();
-    extras.forEach(v=>sub.push(v));
-  }else{
-    // Adjective/pronoun/article/etc.: keep source-supplied companion forms,
-    // but without Korean gender labels on the front.
-    parts.slice(1).forEach(v=>sub.push(v));
+    // Front/overview: only keep a real noun genitive/related form.
+    // Gender articles (ὁ/ἡ/τό) and adjective-style shorthand endings are not shown here.
+    const extras=parts.slice(1).filter(v=>!articles.has(v));
+    extras.forEach(v=>{
+      // Do not show one/two-letter shorthand endings such as ή / όν.
+      const baseCount=Array.from(v.normalize('NFD')).filter(ch=>!/\p{M}/u.test(ch)).length;
+      if(baseCount>=3) sub.push(v);
+    });
   }
 
   const n=Array.from(main.normalize('NFD')).filter(ch=>!/\p{M}/u.test(ch)).length;
