@@ -163,21 +163,30 @@ justify-content:center;align-items:center;text-align:center;padding:12px}
 #prayerPage .prayer-picture-error{padding:10px;color:#a33;font-weight:800}
 #prayerPage .prayer-picture-error[hidden]{display:none!important}
 @media(max-width:820px){
-  /* 그림 원본 비율 유지. 기존 1280px 표시 폭의 75%에서 시작 */
+  /* 주기도문 그림 모드 전용: 원본 비율 보존, 가로 밀기 유지 */
   #prayerPage .prayer-picture-image{width:960px;height:auto}
   #prayerPage .prayer-card.prayer-picture-on{padding:10px 9px 8px}
   #prayerPage .prayer-picture-viewport{margin-top:7px}
 }
 @media(max-width:640px){
-  /* 작은 휴대폰에서는 그림보다 이전/다음 버튼이 먼저 화면 안에 남도록 높이를 제한 */
+  /* 단어학습 카드와 동일한 높이 기준으로 그림 글자 확대 */
   #prayerPage .prayer-picture-image{
     width:auto;
-    height:min(38dvh, 360px);
+    height:clamp(380px, 46dvh, 430px);
     max-width:none;
   }
   #prayerPage .prayer-card.prayer-picture-on{padding:8px 7px 7px}
   #prayerPage .prayer-picture-viewport{margin-top:5px}
   #prayerPage .prayer-picture-on #prayerNum{margin-bottom:0}
+  /* 더 커진 그림에서도 이전/다음 컨트롤을 스크롤 화면에 유지 */
+  #prayerPage:has(.prayer-picture-on) .prayer-nav{
+    position:sticky;
+    bottom:env(safe-area-inset-bottom, 0px);
+    z-index:25;
+    padding:6px 0 4px;
+    background:rgba(255,253,250,.98);
+    border-radius:14px;
+  }
 }
 
 .prayer-shell{margin-top:14px;background:rgba(255,253,250,.97);border-radius:24px;padding:14px;border:1px solid rgba(60,45,30,.06);box-shadow:var(--shadow)}
